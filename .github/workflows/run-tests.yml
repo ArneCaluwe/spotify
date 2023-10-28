@@ -1,8 +1,8 @@
 name: run-tests
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: Test with Angular CLI
 on: [push]
 jobs:
-  check-bats-version:
+  test with Angular CLI:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
