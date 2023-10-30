@@ -1,8 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,ts}"],
+  content: ['./src/**/*.{html,ts}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'bg-primary': 'rgb(0,0,0)',
+        'bg-secondary': 'rgb(18, 18, 18)',
+      },
+      gap: {
+        theme: '8px',
+      },
+      gridTemplateColumns: {
+        theme: '72px 1fr',
+      },
+      gridTemplateRows: {
+        theme: '1fr 79px',
+      },
+    },
   },
   plugins: [],
 };
