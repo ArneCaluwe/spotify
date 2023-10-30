@@ -11,3 +11,11 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   background-color: black;
 }
+* {
+  box-sizing: border-box;
+}
+
+.mat-icon.mat-icon {
+  height: fit-content;
+  width: fit-content;
+}
