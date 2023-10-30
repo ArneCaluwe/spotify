@@ -24,6 +24,7 @@ jobs:
           cache: 'pnpm'
 
       - run: pnpm install
+      - run: pnpm run config
       - run: pnpm run build:prod
       - run: pnpm run test:prod
       - run: pnpm run lint
