@@ -3,10 +3,46 @@
   <section class="rounded-md flex flex-col gap-theme">
     <div
       class="rounded-md bg-bg-secondary p-2 flex flex-col justify-center items-center">
+      <a href="#">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Home"
+          fontIcon="home"
+          class="text-3xl text-gray-600 hover:text-white transition-colors duration-200" />
+      </a>
+      <a href="#">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Search"
+          fontIcon="search"
+          class="text-3xl text-gray-600 hover:text-white transition-colors duration-200" />
+      </a>
     </div>
     <div
       class="rounded-md bg-bg-secondary flex flex-grow flex-col gap-theme p-2 items-center">
-<h1 class="text-3xl font-bold underline text-white">Hello world!</h1>
+      <button>
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Expand library"
+          fontIcon="library_books"
+          class="text-3xl text-gray-600 hover:text-white transition-colors duration-200" />
+      </button>
+      <div
+        class="rounded w-[48px] m-1 bg-gradient-to-br from-purple-950 to-blue-200 h-[48px] grid place-content-center">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Expand library"
+          fontIcon="favorite"
+          class="text-3xl text-white" />
+      </div>
+      <div
+        class="rounded w-[48px] m-1 bg-green-900 h-[48px] grid place-content-center">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Bookmarks"
+          fontIcon="bookmark"
+          class="text-3xl text-green-950" />
+      </div>
     </div>
   </section>
   <body class="rounded-md bg-bg-secondary"></body>
