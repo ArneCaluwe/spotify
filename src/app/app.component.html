@@ -1,7 +1,7 @@
 <section
   class="box-border w-full h-full grid grid-cols-theme grid-rows-theme gap-theme p-2">
   <section class="rounded-md flex flex-col gap-theme">
-    <div
+    <section
       class="rounded-md bg-bg-secondary p-2 flex flex-col justify-center items-center">
       <a href="#">
         <mat-icon
@@ -17,8 +17,8 @@
           fontIcon="search"
           class="text-3xl text-gray-600 hover:text-white transition-colors duration-200" />
       </a>
-    </div>
-    <div
+    </section>
+    <section
       class="rounded-md bg-bg-secondary flex flex-grow flex-col gap-theme p-2 items-center">
       <button>
         <mat-icon
@@ -43,8 +43,95 @@
           fontIcon="bookmark"
           class="text-3xl text-green-950" />
       </div>
-    </div>
+    </section>
   </section>
-  <body class="rounded-md bg-bg-secondary"></body>
-  <footer class=""></footer>
+  <body class="rounded-md bg-bg-secondary">
+    <router-outlet />
+  </body>
+  <footer class="col-span-2 flex flex-grow justify-between items-center p-2">
+    <section class="flex items-center p-2">
+      <div
+        class="rounded w-[56px] h-[56px] bg-slate-500 grid place-content-center">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Album unknown"
+          fontIcon="question_mark"
+          class="text-3xl text-slate-400" />
+      </div>
+      <section class="p-2">
+        <p class="text-white">Unknown song</p>
+        <p class="text-gray-400">unknown author</p>
+      </section>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Album unknown"
+        fontIcon="favorite_outline"
+        class="text-xl text-gray-400" />
+    </section>
+    <section class="flex flex-col p-2">
+      <section class="flex items-center gap-1 m-1">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Shuffle"
+          fontIcon="shuffle"
+          class="text-2xl text-gray-400" />
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Skip to previous song"
+          fontIcon="skip_previous"
+          class="text-2xl text-gray-400" />
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Skip to previous song"
+          fontIcon="pause_circle"
+          class="text-4xl text-gray-400" />
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Skip to next song"
+          fontIcon="skip_next"
+          class="text-2xl text-gray-400" />
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Loop song"
+          fontIcon="loop"
+          class="text-2xl text-gray-400" />
+      </section>
+      <div class="flex justify-center">
+        <div class="rounded w-full h-1 bg-slate-400"></div>
+      </div>
+    </section>
+    <section class="flex items-center p-2 gap-1">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Display song playing"
+        fontIcon="smart_display"
+        class="text-2xl text-gray-400" />
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Display songtext"
+        fontIcon="mic"
+        class="text-2xl text-gray-400" />
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Display queue"
+        fontIcon="queue_music"
+        class="text-2xl text-gray-400" />
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Connect to device"
+        fontIcon="devices"
+        class="text-2xl text-gray-400" />
+      <!-- button to mute here -->
+      <mat-icon
+        aria-hidden="false"
+        aria-label="volume"
+        fontIcon="volume_up"
+        class="text-2xl text-gray-400" />
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Expand to full screen"
+        fontIcon="open_in_full"
+        class="text-2xl text-gray-400" />
+    </section>
+  </footer>
 </section>

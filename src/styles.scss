@@ -19,3 +19,8 @@ body {
   height: fit-content;
   width: fit-content;
 }
+
+.mat-typography p {
+  padding: unset;
+  margin: unset;
+}
