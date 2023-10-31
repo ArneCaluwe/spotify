@@ -6,6 +6,7 @@ module.exports = {
       colors: {
         'bg-primary': 'rgb(0,0,0)',
         'bg-secondary': 'rgb(18, 18, 18)',
+        'bg-ternary': 'rgb(67, 67, 67)',
       },
       gap: {
         theme: '8px',
