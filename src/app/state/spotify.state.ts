@@ -3,7 +3,6 @@ import {
   AuthService,
   SpotifyAccesTokenResponse,
 } from '@app/services/auth.service';
-import { SpotifyService } from '@app/services/spotify.service';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
 import {
@@ -26,7 +25,6 @@ export interface SpotifyStateModel {
 @Injectable()
 export class SpotifyState implements NgxsOnInit {
   private _authService = inject(AuthService);
-  private _spotifyService = inject(SpotifyService);
 
   @Selector()
   static accesToken(state: SpotifyStateModel): string | undefined {
@@ -38,7 +36,7 @@ export class SpotifyState implements NgxsOnInit {
 
   @Selector()
   static accesTokenExists(state: SpotifyStateModel) {
-    return Boolean(state.accesToken);
+    return state.accesToken && state.accesToken.expiryDate > Date.now();
   }
 
   ngxsOnInit(ctx: StateContext<SpotifyStateModel>): void {
