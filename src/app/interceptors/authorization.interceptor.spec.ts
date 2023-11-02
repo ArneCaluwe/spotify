@@ -19,6 +19,10 @@ describe('authorizationInterceptor', () => {
     store = TestBed.inject(Store);
   });
 
+  it('should be created', () => {
+    expect(authorizationInterceptor).toBeTruthy();
+  });
+
   // ...
 
   it('should add an Authorization header', () => {
