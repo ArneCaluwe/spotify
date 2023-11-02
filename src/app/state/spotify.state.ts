@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import * as auth from '@app/auth/';
 import {
   AuthService,
   SpotifyAccesTokenResponse,
@@ -14,12 +15,14 @@ import {
 export interface SpotifyStateModel {
   accesToken?: AccesToken;
   favorites: string[];
+  codeVerifier?: string;
 }
 
 @State<SpotifyStateModel>({
   name: 'spotify',
   defaults: {
     accesToken: undefined,
+    codeVerifier: undefined,
     favorites: [],
   },
 })
@@ -75,16 +78,24 @@ export class SpotifyState implements NgxsOnInit {
         )
         .subscribe();
     } else {
+      const currentState = ctx.getState();
       this._authService
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        .getAuthorizationToken$(action.authenticationCode!)
+        /* eslint-disable @typescript-eslint/no-non-null-assertion  */
+        .getAuthorizationToken$(
+          action.authenticationCode!,
+          currentState.codeVerifier!
+        )
+        /* eslint-enable @typescript-eslint/no-non-null-assertion */
         .subscribe(console.log);
     }
   }
 
   @Action(PkceAuthenticate)
-  pkceAuthenticate() {
-    this._authService.pkceAuthenticate();
+  async pkceAuthenticate(ctx: StateContext<SpotifyStateModel>) {
+    const codeVerifier = auth.codeVerifier;
+    const codeChallenge = await auth.codeChallenge();
+    ctx.patchState({ codeVerifier });
+    this._authService.pkceAuthenticate(codeChallenge);
   }
 
   @Action(AccesTokenValidated)

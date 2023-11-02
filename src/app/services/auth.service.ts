@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { codeChallenge } from '@app/auth/code-challenge';
-import { codeVerifier, generateRandomString } from '@app/auth/code-verifier';
+import { generateRandomString } from '@app/auth/code-verifier';
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 
@@ -35,13 +34,13 @@ export class AuthService {
    * @returns An observable that emits the access token.
    */
   getAuthorizationToken$(
-    authorizationCode: string
+    authorizationCode: string,
+    codeVerifier: string
   ): Observable<SpotifyAccesTokenResponse> {
     const clientId = environment.spotifyClientId;
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    const codeVerifier = window.localStorage.getItem('code_verifier')!;
     const body = new URLSearchParams({
       client_id: clientId,
       grant_type: 'authorization_code',
@@ -56,18 +55,16 @@ export class AuthService {
     );
   }
 
-  async pkceAuthenticate() {
+  async pkceAuthenticate(codeChallenge: string) {
     const clientId = environment.spotifyClientId;
     const redirectUri = environment.redirectUrl;
-
-    window.localStorage.setItem('code_verifier', codeVerifier);
 
     const url = new URL(`${environment.authApi}authorize`);
     const params = {
       response_type: 'code',
       client_id: clientId,
       code_challenge_method: 'S256',
-      code_challenge: await codeChallenge(),
+      code_challenge: codeChallenge,
       redirect_uri: redirectUri,
       state: generateRandomString(16),
     };
