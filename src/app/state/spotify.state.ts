@@ -8,6 +8,7 @@ import { map, tap } from 'rxjs/operators';
 import {
   AccesTokenValidated,
   FetchSpotifyToken,
+  PkceAuthenticate,
 } from './spotify.state.actions';
 
 export interface SpotifyStateModel {
@@ -49,26 +50,41 @@ export class SpotifyState implements NgxsOnInit {
         return;
       }
     }
-    ctx.dispatch(new FetchSpotifyToken());
+    // ctx.dispatch(new FetchSpotifyToken());
   }
 
   @Action(FetchSpotifyToken)
-  fetchSpotifyToken(ctx: StateContext<SpotifyStateModel>) {
-    this._authService
-      .getToken$()
-      .pipe(
-        map<SpotifyAccesTokenResponse, AccesToken>(res => {
-          return {
-            accessToken: res.access_token,
-            expiryDate: Date.now() + res.expires_in * 1000,
-            tokenType: res.token_type,
-          };
-        }),
-        tap(accesToken =>
-          ctx.dispatch(new AccesTokenValidated(true, accesToken))
+  fetchSpotifyToken(
+    ctx: StateContext<SpotifyStateModel>,
+    action: FetchSpotifyToken
+  ) {
+    if (action.flow === 'client-secret') {
+      this._authService
+        .getClientToken$()
+        .pipe(
+          map<SpotifyAccesTokenResponse, AccesToken>(res => {
+            return {
+              accessToken: res.access_token,
+              expiryDate: Date.now() + res.expires_in * 1000,
+              tokenType: res.token_type,
+            };
+          }),
+          tap(accesToken =>
+            ctx.dispatch(new AccesTokenValidated(true, accesToken))
+          )
         )
-      )
-      .subscribe();
+        .subscribe();
+    } else {
+      this._authService
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        .getAuthorizationToken$(action.authenticationCode!)
+        .subscribe(console.log);
+    }
+  }
+
+  @Action(PkceAuthenticate)
+  pkceAuthenticate() {
+    this._authService.pkceAuthenticate();
   }
 
   @Action(AccesTokenValidated)

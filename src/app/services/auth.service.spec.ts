@@ -31,7 +31,7 @@ describe('AuthService', () => {
       expires_in: 3600,
     };
 
-    authService.getToken$().subscribe(response => {
+    authService.getClientToken$().subscribe(response => {
       expect(response.access_token).toEqual(mockResponse.access_token);
       expect(response.token_type).toEqual(mockResponse.token_type);
       expect(response.expires_in).toEqual(mockResponse.expires_in);
