@@ -17,11 +17,14 @@ export class AuthService {
    */
   getClientToken$(): Observable<SpotifyAccesTokenResponse> {
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-    const clientId = environment.spotifyClientId;
-    const clientSecret = environment.spotifyClientSecret;
+    const body = new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: environment.spotifyClientId,
+      client_secret: environment.spotifyClientSecret,
+    });
     return this._httpClient.post<SpotifyAccesTokenResponse>(
       `${environment.authApi}token`,
-      `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`,
+      body.toString(),
       { headers }
     );
   }
@@ -36,19 +39,18 @@ export class AuthService {
   getAuthorizationToken$(
     authorizationCode: string,
     codeVerifier: string
-  ): Observable<SpotifyAccesTokenResponse> {
-    const clientId = environment.spotifyClientId;
+  ): Observable<SpotifyUserAccessTokenResponse> {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
     const body = new URLSearchParams({
-      client_id: clientId,
+      client_id: environment.spotifyClientId,
       grant_type: 'authorization_code',
       code: authorizationCode,
       redirect_uri: environment.redirectUrl,
       code_verifier: codeVerifier,
     });
-    return this._httpClient.post<SpotifyAccesTokenResponse>(
+    return this._httpClient.post<SpotifyUserAccessTokenResponse>(
       `${environment.authApi}api/token`,
       body.toString(),
       { headers }
@@ -77,4 +79,8 @@ export type SpotifyAccesTokenResponse = {
   access_token: string;
   token_type: 'Bearer';
   expires_in: number;
+};
+
+export type SpotifyUserAccessTokenResponse = SpotifyAccesTokenResponse & {
+  refresh_token: string;
 };

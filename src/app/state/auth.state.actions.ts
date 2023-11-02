@@ -1,7 +1,7 @@
-import { AccesToken } from './spotify.state';
+import { AccessToken } from './auth.state';
 
 export class FetchSpotifyToken {
-  static readonly type = '[Spotify] Fetch Spotify Token';
+  static readonly type = '[Auth] Fetch Spotify Token';
   constructor(
     public flow: 'client-secret' | 'pkce' = 'client-secret',
     public authenticationCode?: string
@@ -9,13 +9,13 @@ export class FetchSpotifyToken {
 }
 
 export class PkceAuthenticate {
-  static readonly type = '[Spotify] PKCE Authenticate';
+  static readonly type = '[Auth] PKCE Authenticate';
 }
 
 export class AccesTokenValidated {
-  static readonly type = '[Spotify] Spotify Access Token Validated';
+  static readonly type = '[Auth] Spotify Access Token Validated';
   constructor(
     public unchanged: boolean,
-    public accesToken?: AccesToken
+    public accesToken?: AccessToken
   ) {}
 }

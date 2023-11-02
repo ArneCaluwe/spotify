@@ -3,7 +3,7 @@
   <section class="rounded-md flex flex-col gap-theme">
     <section
       class="rounded-md bg-bg-secondary p-2 flex flex-col justify-center items-center">
-      <a href="#">
+      <a routerLink="home" routerLinkActive="text-white">
         <mat-icon
           aria-hidden="false"
           aria-label="Home"
@@ -46,6 +46,7 @@
     </section>
   </section>
   <body class="rounded-md bg-bg-secondary p-4">
+    <button (click)="authenticate()">authenticate</button>
     <router-outlet />
   </body>
   <footer class="col-span-2 flex flex-grow justify-between items-center p-2">

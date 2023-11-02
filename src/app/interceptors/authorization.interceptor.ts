@@ -1,10 +1,10 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { SpotifyState } from '@app/state';
+import { AuthState } from '@app/state';
 import { Store } from '@ngxs/store';
 
 export const authorizationInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = inject(Store).selectSnapshot(SpotifyState.accesToken);
+  const token = inject(Store).selectSnapshot(AuthState.accesToken);
   if (!token) {
     console.debug('no token found, skipping handling');
     return next(req);
