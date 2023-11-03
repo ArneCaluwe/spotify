@@ -13,7 +13,8 @@
   });
   // `environment.ts` file structure
   const envConfigFile = `export const environment = {
-  authApi: 'https://accounts.spotify.com/api/',
+  authApi: 'https://accounts.spotify.com/',
+  redirectUrl: 'http://localhost:4200/auth/callback',
   spotifyClientId: '${process.env['SPOTIFY_CLIENT_ID']}',
   spotifyClientSecret: '${process.env['SPOTIFY_CLIENT_SECRET']}',
   appVersion: '${appVersion}',
@@ -21,7 +22,8 @@
 };
 `;
   const developmentEnvConfigFile = `export const environment = {
-  authApi: 'https://accounts.spotify.com/api/',
+  authApi: 'https://accounts.spotify.com/',
+  redirectUrl: 'http://localhost:4200/auth/callback',
   spotifyClientId: '${process.env['SPOTIFY_CLIENT_ID']}',
   spotifyClientSecret: '${process.env['SPOTIFY_CLIENT_SECRET']}',
   appVersion: '${appVersion}',

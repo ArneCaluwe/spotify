@@ -7,16 +7,18 @@ import {
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { environment } from '@env/environment';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
 import { routes } from './app.routes';
 import { authorizationInterceptor } from './interceptors/authorization.interceptor';
-import { SpotifyState } from './state/spotify.state';
+import { AuthState, SpotifyState } from './state';
 
 const provideNgxs: () => EnvironmentProviders = () =>
   importProvidersFrom(
-    NgxsModule.forRoot([SpotifyState], {
+    NgxsModule.forRoot([SpotifyState, AuthState], {
       developmentMode: !environment.production,
       selectorOptions: {
         suppressErrors: false,
@@ -25,6 +27,10 @@ const provideNgxs: () => EnvironmentProviders = () =>
     }),
     NgxsStoragePluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot({
+      disabled: environment.production,
+    }),
+    NgxsRouterPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot({
       disabled: environment.production,
     })
   );
