@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { AccesTokenValidated, FetchSpotifyToken } from '@app/state';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { tap } from 'rxjs';
 import { z } from 'zod';
 
 @Component({
@@ -37,11 +36,7 @@ export class AuthCallbackComponent {
       }
     }
     this._actions$
-      .pipe(
-        ofActionSuccessful(AccesTokenValidated),
-        takeUntilDestroyed(),
-        tap(console.log)
-      )
+      .pipe(ofActionSuccessful(AccesTokenValidated), takeUntilDestroyed())
       .subscribe(() => this._store.dispatch(new Navigate(['/'])));
   }
 }
