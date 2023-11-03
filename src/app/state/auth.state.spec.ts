@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { AuthState, AuthStateModel } from './auth.state';
-import { AccesTokenValidated, FetchSpotifyToken } from './auth.state.actions';
+import { AccesTokenValidated } from './auth.state.actions';
 
 describe('AuthState', () => {
   let store: Store;
@@ -21,7 +21,7 @@ describe('AuthState', () => {
 
   it('should return undefined when accesToken is  undefined', () => {
     const state = {
-      spotify: {
+      auth: {
         accesToken: undefined,
       },
     };
@@ -32,7 +32,7 @@ describe('AuthState', () => {
 
   it('should return undefined when accesToken is expired', () => {
     const state = {
-      spotify: {
+      auth: {
         accesToken: {
           accessToken: 'mock-token',
           expiryDate: Date.now() - 1000, // expired
@@ -46,7 +46,7 @@ describe('AuthState', () => {
 
   it('should return the access token when accesToken is valid', () => {
     const state = {
-      spotify: {
+      auth: {
         accesToken: {
           accessToken: 'mock-token',
           expiryDate: Date.now() + 1000, // not expired
@@ -65,7 +65,6 @@ describe('AuthState', () => {
         tokenType: 'Bearer',
         expiryDate: Date.now() + 1000, // not expired
       },
-      favorites: [],
     };
 
     const authState = TestBed.inject(AuthState);
@@ -80,33 +79,7 @@ describe('AuthState', () => {
     authState.ngxsOnInit(stateContextMock);
 
     expect(stateContextMock.dispatch).toHaveBeenCalledOnceWith(
-      new AccesTokenValidated(false)
-    );
-  });
-
-  it('should fetch token if it is expired', () => {
-    const state: AuthStateModel = {
-      accesToken: {
-        accessToken: 'mock-token',
-        tokenType: 'Bearer',
-        expiryDate: Date.now() - 1000, // not expired
-      },
-      favorites: [],
-    };
-
-    const authState = TestBed.inject(AuthState);
-    expect(AuthState).toBeTruthy();
-    const store = TestBed.inject(Store);
-    store.reset({ spotify: state });
-    const stateContextMock = jasmine.createSpyObj('StateContext', [
-      'getState',
-      'dispatch',
-    ]);
-    stateContextMock.getState.and.returnValue(state);
-    authState.ngxsOnInit(stateContextMock);
-
-    expect(stateContextMock.dispatch).toHaveBeenCalledOnceWith(
-      new FetchSpotifyToken()
+      new AccesTokenValidated()
     );
   });
 });

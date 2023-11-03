@@ -14,11 +14,11 @@ import {
   AccesTokenValidated,
   FetchSpotifyToken,
   PkceAuthenticate,
+  RefreshSpotifyToken,
 } from './auth.state.actions';
 
 export interface AuthStateModel {
   accesToken?: AccessToken;
-  favorites: string[];
   codeVerifier?: string;
 }
 
@@ -27,7 +27,6 @@ export interface AuthStateModel {
   defaults: {
     accesToken: undefined,
     codeVerifier: undefined,
-    favorites: [],
   },
 })
 @Injectable()
@@ -54,11 +53,11 @@ export class AuthState implements NgxsOnInit {
       console.debug('Token exists, checking if expired');
       if (currentState.accesToken.expiryDate > Date.now()) {
         console.debug('Token is not expired, skipping fetch');
-        ctx.dispatch(new AccesTokenValidated(true));
+        ctx.dispatch(new AccesTokenValidated());
         return;
       }
+      ctx.dispatch(new RefreshSpotifyToken());
     }
-    // ctx.dispatch(new FetchSpotifyToken());
   }
 
   @Action(FetchSpotifyToken)
@@ -76,9 +75,10 @@ export class AuthState implements NgxsOnInit {
             tokenType: res.token_type,
           };
         }),
-        tap(accesToken =>
-          ctx.dispatch(new AccesTokenValidated(false, accesToken))
-        )
+        tap(accesToken => {
+          ctx.patchState({ accesToken });
+          ctx.dispatch(new AccesTokenValidated());
+        })
       );
     } else {
       const currentState = ctx.getState();
@@ -98,14 +98,38 @@ export class AuthState implements NgxsOnInit {
               refreshToken: res.refresh_token,
             };
           }),
-          tap(accesToken =>
-            ctx.dispatch(new AccesTokenValidated(false, accesToken))
-          )
+          tap(accesToken => {
+            ctx.patchState({ accesToken });
+            ctx.dispatch(new AccesTokenValidated());
+          })
         );
     }
     runInInjectionContext(this._injector, () => {
       stream$.pipe(takeUntilDestroyed()).subscribe();
     });
+  }
+
+  @Action(RefreshSpotifyToken)
+  async refreshSpotifyToken(ctx: StateContext<AuthStateModel>) {
+    const currentState = ctx.getState();
+    if (!currentState.accesToken || !isUserAccessToken(currentState.accesToken))
+      return;
+    const refreshToken = currentState.accesToken.refreshToken;
+    this._authService
+      .refreshAuthorizationToken$(refreshToken)
+      .pipe(
+        map(res => {
+          return {
+            accessToken: res.access_token,
+            expiryDate: Date.now() + res.expires_in * 1000,
+            tokenType: res.token_type,
+            refreshToken: res.refresh_token,
+          };
+        }),
+        tap(accesToken => ctx.patchState({ accesToken })),
+        tap(ctx.dispatch(new AccesTokenValidated()))
+      )
+      .subscribe();
   }
 
   @Action(PkceAuthenticate)
@@ -114,15 +138,6 @@ export class AuthState implements NgxsOnInit {
     const codeChallenge = await auth.codeChallenge();
     ctx.patchState({ codeVerifier });
     this._authService.pkceAuthenticate(codeChallenge);
-  }
-
-  @Action(AccesTokenValidated)
-  accesTokenReceived(
-    ctx: StateContext<AuthStateModel>,
-    action: AccesTokenValidated
-  ) {
-    if (action.unchanged) return;
-    ctx.patchState({ accesToken: action.accesToken });
   }
 }
 export type AccessToken = GenericAccesToken | UserAccessToken;
@@ -136,3 +151,9 @@ export type GenericAccesToken = {
 export type UserAccessToken = GenericAccesToken & {
   refreshToken: string;
 };
+
+function isUserAccessToken(
+  accesToken: AccessToken
+): accesToken is UserAccessToken {
+  return !!(accesToken as UserAccessToken).refreshToken;
+}
