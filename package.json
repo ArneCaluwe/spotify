@@ -26,6 +26,7 @@
     "@angular/platform-browser": "^17.0.0-next.0",
     "@angular/platform-browser-dynamic": "^17.0.0-next.0",
     "@angular/router": "^17.0.0-next.0",
+    "@ngxs/devtools-plugin": "^3.8.1",
     "@ngxs/logger-plugin": "^3.8.1",
     "@ngxs/router-plugin": "^3.8.1",
     "@ngxs/storage-plugin": "^3.8.1",
