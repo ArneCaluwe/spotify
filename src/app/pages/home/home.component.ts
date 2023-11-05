@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { Album, Artist } from '@app/services/spotify.service';
+import { SpotifyState } from '@app/state';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +14,12 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
+  @Select(SpotifyState.albums)
+  albums$!: Observable<Array<Album>>;
+
+  @Select(SpotifyState.artists)
+  artists$!: Observable<Array<Artist>>;
+
   favorites = [
     'My Chemical Romance',
     'The Used',
