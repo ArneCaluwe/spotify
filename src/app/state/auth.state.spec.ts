@@ -58,28 +58,50 @@ describe('AuthState', () => {
     expect(response).toEqual('mock-token');
   });
 
-  it('should not fetch token if it is not expired', () => {
-    const state: AuthStateModel = {
-      accesToken: {
-        accessToken: 'mock-token',
-        tokenType: 'Bearer',
-        expiryDate: Date.now() + 1000, // not expired
+  it('should return the access token when accesToken is valid', () => {
+    const state = {
+      auth: {
+        accesToken: {
+          accessToken: 'mock-token',
+          expiryDate: Date.now() + 1000, // not expired
+        },
       },
     };
+    store.reset(state);
+    const response = store.selectSnapshot(AuthState.accesToken);
+    expect(response).toEqual('mock-token');
+  });
 
-    const authState = TestBed.inject(AuthState);
-    expect(AuthState).toBeTruthy();
-    const store = TestBed.inject(Store);
-    store.reset({ spotify: state });
-    const stateContextMock = jasmine.createSpyObj('StateContext', [
-      'getState',
-      'dispatch',
-    ]);
-    stateContextMock.getState.and.returnValue(state);
-    authState.ngxsOnInit(stateContextMock);
+  describe('ngOnInit', () => {
+    let state: AuthStateModel;
+    let authState: AuthState;
+    let store: Store;
+    beforeEach(() => {
+      state = {
+        accesToken: {
+          accessToken: 'mock-token',
+          tokenType: 'Bearer',
+          expiryDate: Date.now() + 1000, // not expired
+        },
+      };
 
-    expect(stateContextMock.dispatch).toHaveBeenCalledOnceWith(
-      new AccesTokenValidated()
-    );
+      authState = TestBed.inject(AuthState);
+      store = TestBed.inject(Store);
+
+      store.reset({ spotify: state });
+    });
+
+    it('should dispatch AccessToken-validated if access token is not expired', () => {
+      const stateContextMock = jasmine.createSpyObj('StateContext', [
+        'getState',
+        'dispatch',
+      ]);
+      stateContextMock.getState.and.returnValue(state);
+      authState.ngxsOnInit(stateContextMock);
+
+      expect(stateContextMock.dispatch).toHaveBeenCalledOnceWith(
+        new AccesTokenValidated()
+      );
+    });
   });
 });

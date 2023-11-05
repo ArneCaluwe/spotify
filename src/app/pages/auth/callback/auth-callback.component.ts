@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { AccesTokenValidated, FetchSpotifyToken } from '@app/state';
+import {
+  AccesTokenValidated,
+  FetchSpotifyAuthorizationToken,
+} from '@app/state';
 import { Navigate } from '@ngxs/router-plugin';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { z } from 'zod';
@@ -22,7 +25,9 @@ export class AuthCallbackComponent {
     const scheme = z.object({ code: z.string(), state: z.string().optional() });
     const result = scheme.safeParse(params);
     if (result.success) {
-      this._store.dispatch(new FetchSpotifyToken('pkce', result.data.code));
+      this._store.dispatch(
+        new FetchSpotifyAuthorizationToken(result.data.code)
+      );
     } else {
       const errorScheme = z.object({
         error: z.string(),

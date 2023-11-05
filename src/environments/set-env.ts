@@ -14,6 +14,7 @@
   // `environment.ts` file structure
   const envConfigFile = `export const environment = {
   authApi: 'https://accounts.spotify.com/',
+  spotifyApi: 'https://api.spotify.com/v1/',
   redirectUrl: 'http://localhost:4200/auth/callback',
   spotifyClientId: '${process.env['SPOTIFY_CLIENT_ID']}',
   spotifyClientSecret: '${process.env['SPOTIFY_CLIENT_SECRET']}',
@@ -23,6 +24,7 @@
 `;
   const developmentEnvConfigFile = `export const environment = {
   authApi: 'https://accounts.spotify.com/',
+  spotifyApi: 'https://api.spotify.com/v1/',
   redirectUrl: 'http://localhost:4200/auth/callback',
   spotifyClientId: '${process.env['SPOTIFY_CLIENT_ID']}',
   spotifyClientSecret: '${process.env['SPOTIFY_CLIENT_SECRET']}',

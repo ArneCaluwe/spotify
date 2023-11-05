@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { generateRandomString } from '@app/auth/code-verifier';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,18 +15,20 @@ export class AuthService {
    * Does not link to a certain user,
    * so it can only be used to fetch public data.
    */
-  getClientToken$(): Observable<SpotifyAccesTokenResponse> {
+  getClientToken$(): Observable<SpotifyClientToken> {
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const body = new URLSearchParams({
       client_id: environment.spotifyClientId,
       client_secret: environment.spotifyClientSecret,
       grant_type: 'client_credentials',
     });
-    return this._httpClient.post<SpotifyAccesTokenResponse>(
-      `${environment.authApi}api/token`,
-      body.toString(),
-      { headers }
-    );
+    return this._httpClient
+      .post<SpotifyClientTokenResponse>(
+        `${environment.authApi}api/token`,
+        body.toString(),
+        { headers }
+      )
+      .pipe(map(mapClientToken));
   }
 
   /**
@@ -39,7 +41,7 @@ export class AuthService {
   getAuthorizationToken$(
     authorizationCode: string,
     codeVerifier: string
-  ): Observable<SpotifyUserAccessTokenResponse> {
+  ): Observable<SpotifyAuthenticationToken> {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
@@ -49,12 +51,15 @@ export class AuthService {
       code: authorizationCode,
       grant_type: 'authorization_code',
       redirect_uri: environment.redirectUrl,
+      scope: 'user-top-read',
     });
-    return this._httpClient.post<SpotifyUserAccessTokenResponse>(
-      `${environment.authApi}api/token`,
-      body.toString(),
-      { headers }
-    );
+    return this._httpClient
+      .post<SpotifyAuthenticationTokenResponse>(
+        `${environment.authApi}api/token`,
+        body.toString(),
+        { headers }
+      )
+      .pipe(map(mapAuthenticationToken));
   }
 
   /**
@@ -66,7 +71,7 @@ export class AuthService {
    */
   refreshAuthorizationToken$(
     refreshToken: string
-  ): Observable<SpotifyUserAccessTokenResponse> {
+  ): Observable<SpotifyAuthenticationToken> {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
@@ -75,11 +80,13 @@ export class AuthService {
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
     });
-    return this._httpClient.post<SpotifyUserAccessTokenResponse>(
-      `${environment.authApi}api/token`,
-      body.toString(),
-      { headers }
-    );
+    return this._httpClient
+      .post<SpotifyAuthenticationTokenResponse>(
+        `${environment.authApi}api/token`,
+        body.toString(),
+        { headers }
+      )
+      .pipe(map(mapAuthenticationToken));
   }
 
   /**
@@ -104,12 +111,51 @@ export class AuthService {
   }
 }
 
-export type SpotifyAccesTokenResponse = {
+export type SpotifyAccessToken =
+  | SpotifyClientToken
+  | SpotifyAuthenticationToken;
+
+export type SpotifyClientToken = {
+  accessToken: string;
+  expiryDate: number;
+  tokenType: 'Bearer';
+};
+
+export type SpotifyAuthenticationToken = SpotifyClientToken & {
+  refreshToken: string;
+};
+
+export function isSpotifyAuthenticationToken(
+  accesToken: SpotifyAccessToken
+): accesToken is SpotifyAuthenticationToken {
+  return !!(accesToken as SpotifyAuthenticationToken).refreshToken;
+}
+
+type SpotifyClientTokenResponse = {
   access_token: string;
   token_type: 'Bearer';
   expires_in: number;
 };
 
-export type SpotifyUserAccessTokenResponse = SpotifyAccesTokenResponse & {
+type SpotifyAuthenticationTokenResponse = SpotifyClientTokenResponse & {
   refresh_token: string;
 };
+
+function mapAuthenticationToken(
+  tokenResponse: SpotifyAuthenticationTokenResponse
+): SpotifyAuthenticationToken {
+  return {
+    ...mapClientToken(tokenResponse),
+    refreshToken: tokenResponse.refresh_token,
+  };
+}
+
+function mapClientToken(
+  tokenResponse: SpotifyClientTokenResponse
+): SpotifyClientToken {
+  return {
+    accessToken: tokenResponse.access_token,
+    tokenType: tokenResponse.token_type,
+    expiryDate: Date.now() + tokenResponse.expires_in * 1_000,
+  };
+}

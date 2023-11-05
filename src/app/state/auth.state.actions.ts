@@ -1,9 +1,10 @@
-export class FetchSpotifyToken {
-  static readonly type = '[Auth] Fetch Spotify Token';
-  constructor(
-    public flow: 'client-secret' | 'pkce' = 'client-secret',
-    public authenticationCode?: string
-  ) {}
+export class FetchSpotifyClientToken {
+  static readonly type = '[Auth] Fetch Spotify Client Token';
+}
+
+export class FetchSpotifyAuthorizationToken {
+  static readonly type = '[Auth] Fetch Spotify Authorization Token';
+  constructor(public authenticationCode: string) {}
 }
 
 export class RefreshSpotifyToken {
@@ -16,4 +17,12 @@ export class PkceAuthenticate {
 
 export class AccesTokenValidated {
   static readonly type = '[Auth] Spotify Access Token Validated';
+}
+
+export class RequestFailed {
+  static readonly type = '[Auth] Request Failed';
+  constructor(
+    public error: Error,
+    public msg?: string
+  ) {}
 }
