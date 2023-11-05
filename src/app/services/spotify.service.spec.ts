@@ -50,6 +50,25 @@ describe('SpotifyService', () => {
     });
   });
 
+  describe('getRelatedArtists$', () => {
+    it('should return all related artists', () => {
+      const mockResponse = { artists: [] as const };
+
+      const expectedResponse = [] as const;
+
+      spotifyService.getRelatedArtists$('mock-artist').subscribe(response => {
+        expect(response).toEqual(expectedResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `https://api.spotify.com/v1/artists/mock-artist/related-artists`
+      );
+      expect(req.request.method).toEqual('GET');
+
+      req.flush(mockResponse);
+    });
+  });
+
   describe('getTopItems$', () => {
     it('should return an authorized users favorites', () => {
       const mockResponse = [] as const;

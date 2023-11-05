@@ -24,6 +24,14 @@ export class SpotifyService {
       )
       .pipe(map(mapNewReleases));
   }
+
+  getRelatedArtists$(id: string) {
+    return this._httpClient
+      .get<{ artists: Array<ArtistResponse> }>(
+        `${environment.spotifyApi}artists/${id}/related-artists`
+      )
+      .pipe(map(mapArtists));
+  }
 }
 
 function mapNewReleases(newReleases: { albums: NewReleasesResponse }) {
@@ -78,6 +86,28 @@ function mapNewReleases(newReleases: { albums: NewReleasesResponse }) {
   return { albums, artists };
 }
 
+function mapArtists(artists: { artists: Array<Artist> }) {
+  return artists.artists.map(artist => {
+    return {
+      id: artist.id,
+      name: artist.name,
+      uri: artist.uri,
+      href: artist.href,
+      genres: artist.genres,
+      images: artist.images,
+    };
+  });
+}
+
+export type Artist = {
+  id: string;
+  name: string;
+  uri: string;
+  href: string;
+  genres: Array<string>;
+  images: Array<ImageResponse>;
+};
+
 export type AlbumArtist = {
   id: string;
   name: string;
@@ -106,7 +136,7 @@ type NewReleasesResponse = {
 
 type AlbumResponse = {
   album_type: string;
-  artists: Array<ArtistResponse>;
+  artists: Array<AlbumArtistResponse>;
   available_markets: Array<string>;
   external_urls: {
     spotify: string;
@@ -122,13 +152,31 @@ type AlbumResponse = {
   uri: string;
 };
 
-type ArtistResponse = {
+type AlbumArtistResponse = {
   external_urls: {
     spotify: string;
   };
   href: string;
   id: string;
   name: string;
+  type: 'artist';
+  uri: string;
+};
+
+type ArtistResponse = {
+  external_urls: {
+    spotify: string;
+  };
+  followers: {
+    href: null;
+    total: number;
+  };
+  genres: Array<string>;
+  href: string;
+  id: string;
+  images: Array<ImageResponse>;
+  name: string;
+  popularity: number;
   type: 'artist';
   uri: string;
 };
