@@ -3,12 +3,12 @@
   <section class="rounded-md flex flex-col gap-theme">
     <section
       class="rounded-md bg-bg-secondary p-2 flex flex-col justify-center items-center">
-      <a [routerLink]="['/home']" routerLinkActive="text-white">
+      <a [routerLink]="['/home']" routerLinkActive="active" class="group">
         <mat-icon
           aria-hidden="false"
           aria-label="Home"
           fontIcon="home"
-          class="text-3xl text-gray-600 hover:text-white transition-colors duration-200" />
+          class="text-3xl text-gray-600 hover:text-white transition-colors duration-200 group-[.active]:text-white" />
       </a>
       <a href="#">
         <mat-icon
