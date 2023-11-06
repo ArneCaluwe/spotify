@@ -5,7 +5,7 @@ import { AuthState } from './state';
 
 const AuthenticatedGuard = () => {
   const accessToken = inject(Store).selectSnapshot(AuthState.accesToken);
-  return accessToken ? true : inject(Router).navigate(['/authenticate']);
+  return accessToken ? true : inject(Router).parseUrl('/authenticate');
 };
 
 export const routes: Routes = [
