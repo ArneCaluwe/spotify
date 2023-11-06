@@ -12,12 +12,14 @@ export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
+    title: 'Spotify - Home',
     loadComponent: () =>
       import('./pages/home/home.component').then(m => m.HomeComponent),
     canActivate: [AuthenticatedGuard],
   },
   {
     path: 'authenticate',
+    title: 'Spotify - Authenticate',
     loadComponent: () =>
       import('./pages/authenticate/authenticate.component').then(
         m => m.AuthenticateComponent
@@ -25,6 +27,7 @@ export const routes: Routes = [
   },
   {
     path: 'auth/callback',
+    title: 'Spotify - Athenticating ...',
     loadComponent: () =>
       import('./pages/auth/callback/auth-callback.component').then(
         m => m.AuthCallbackComponent
