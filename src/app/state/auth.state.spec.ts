@@ -58,20 +58,6 @@ describe('AuthState', () => {
     expect(response).toEqual('mock-token');
   });
 
-  it('should return the access token when accesToken is valid', () => {
-    const state = {
-      auth: {
-        accesToken: {
-          accessToken: 'mock-token',
-          expiryDate: Date.now() + 1000, // not expired
-        },
-      },
-    };
-    store.reset(state);
-    const response = store.selectSnapshot(AuthState.accesToken);
-    expect(response).toEqual('mock-token');
-  });
-
   describe('ngOnInit', () => {
     let state: AuthStateModel;
     let authState: AuthState;

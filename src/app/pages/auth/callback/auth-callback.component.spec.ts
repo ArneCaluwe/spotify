@@ -1,10 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { FetchSpotifyAuthorizationToken, SpotifyState } from '@app/state';
-import { NgxsModule, Store } from '@ngxs/store';
+import {
+  AccesTokenValidated,
+  FetchSpotifyAuthorizationToken,
+  SpotifyState,
+} from '@app/state';
+import { Navigate } from '@ngxs/router-plugin';
+import { Actions, NgxsModule, Store } from '@ngxs/store';
+import { Subject, of } from 'rxjs';
 import { AuthCallbackComponent } from './auth-callback.component';
 
 describe(AuthCallbackComponent.name, () => {
@@ -12,22 +16,23 @@ describe(AuthCallbackComponent.name, () => {
   let fixture: ComponentFixture<AuthCallbackComponent>;
 
   let store: Store;
+  let actions$: Subject<AccesTokenValidated>;
   beforeEach(async () => {
+    actions$ = new Subject<AccesTokenValidated>();
     await TestBed.configureTestingModule({
       imports: [
         AuthCallbackComponent,
         NgxsModule.forRoot([SpotifyState]),
-        RouterTestingModule,
         HttpClientTestingModule,
       ],
-    }).compileComponents();
+    })
+      .overrideProvider(Actions, {
+        useValue: { pipe: () => actions$.asObservable() },
+      })
+      .compileComponents();
 
-    const activatedRoute = TestBed.inject(ActivatedRoute);
-    activatedRoute.snapshot.queryParams = {
-      code: 'mock-authentication-code',
-    };
     store = TestBed.inject(Store);
-    spyOn(store, 'dispatch').and.callThrough();
+    spyOn(store, 'dispatch').and.returnValue(of(undefined));
 
     fixture = TestBed.createComponent(AuthCallbackComponent);
     component = fixture.componentInstance;
@@ -38,9 +43,15 @@ describe(AuthCallbackComponent.name, () => {
     expect(component).toBeTruthy();
   });
 
-  it('should dispatch fetchAuthorizationToken with snapshot', () => {
+  it('should dispatch fetchAuthorizationToken with token when token is provided', () => {
+    component.code = 'mock-authentication-code';
     expect(store.dispatch).toHaveBeenCalledOnceWith(
       new FetchSpotifyAuthorizationToken('mock-authentication-code')
     );
+  });
+
+  it('should navigate to root on success', () => {
+    actions$.next(new AccesTokenValidated());
+    expect(store.dispatch).toHaveBeenCalledOnceWith(new Navigate(['/']));
   });
 });
