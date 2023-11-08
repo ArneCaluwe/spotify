@@ -19,13 +19,4 @@ export class HomeComponent {
 
   @Select(SpotifyState.artists)
   artists$!: Observable<Array<Artist>>;
-
-  favorites = [
-    'My Chemical Romance',
-    'The Used',
-    'Taking Back Sunday',
-    'Panic! At the disco',
-    'Sam Ryder',
-    'The Killers',
-  ];
 }
