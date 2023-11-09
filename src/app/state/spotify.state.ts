@@ -17,7 +17,7 @@ import {
 export interface SpotifyStateModel {
   favorites: unknown[];
   albums: Array<Album>;
-  albumArtists: Array<AlbumArtist>;
+  albumArtists: { [key: string]: AlbumArtist };
   artists: Array<Artist>;
 }
 
@@ -26,7 +26,7 @@ export interface SpotifyStateModel {
   defaults: {
     favorites: [],
     albums: [],
-    albumArtists: [],
+    albumArtists: {},
     artists: [],
   },
 })

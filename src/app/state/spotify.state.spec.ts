@@ -17,4 +17,26 @@ describe('SpotifyState', () => {
   it('should be created', () => {
     expect(store).toBeTruthy();
   });
+
+  it('should return empty array for albums when no albums', () => {
+    const state = {
+      spotify: {
+        albums: [],
+      },
+    };
+    store.reset(state);
+    const response = store.selectSnapshot(SpotifyState.albums);
+    expect(response).toBe([]);
+  });
+
+  it('should return empty array for artists when no artists', () => {
+    const state = {
+      spotify: {
+        artists: [],
+      },
+    };
+    store.reset(state);
+    const response = store.selectSnapshot(SpotifyState.artists);
+    expect(response).toBe([]);
+  });
 });

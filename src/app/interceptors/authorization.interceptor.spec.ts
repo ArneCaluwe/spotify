@@ -23,7 +23,21 @@ describe('authorizationInterceptor', () => {
     expect(authorizationInterceptor).toBeTruthy();
   });
 
-  // ...
+  it('should skip adding a token when no token is available', () => {
+    const mockToken = undefined;
+    spyOn(store, 'selectSnapshot').and.returnValue(mockToken);
+
+    const next = (
+      req: HttpRequest<unknown>
+    ): Observable<HttpEvent<unknown>> => {
+      expect(req.headers.get('Authorization')).toBeNull();
+      return new Observable();
+    };
+
+    TestBed.runInInjectionContext(() => {
+      authorizationInterceptor(new HttpRequest('GET', '/'), next);
+    });
+  });
 
   it('should add an Authorization header', () => {
     const mockToken = 'mock-token';

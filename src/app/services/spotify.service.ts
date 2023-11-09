@@ -13,10 +13,6 @@ export class SpotifyService {
     return this._httpClient.get(`${environment.spotifyApi}me/top/${type}`);
   }
 
-  getArtist$(id: string) {
-    return this._httpClient.get(`${environment.spotifyApi}artists/${id}`);
-  }
-
   getNewReleases$() {
     return this._httpClient
       .get<{ albums: NewReleasesResponse }>(
@@ -35,10 +31,6 @@ export class SpotifyService {
 }
 
 function mapNewReleases(newReleases: { albums: NewReleasesResponse }) {
-  type accMap = {
-    [key: string]: Album | AlbumArtist;
-  };
-
   const releaseValues = newReleases.albums.items
     .map(item => {
       const artist = item.artists.map(artist => {
@@ -61,7 +53,14 @@ function mapNewReleases(newReleases: { albums: NewReleasesResponse }) {
       };
       return { album, artist };
     })
-    .reduce(
+    .reduce<
+      [
+        { [key: string]: Album },
+        {
+          [key: string]: AlbumArtist;
+        },
+      ]
+    >(
       ([accAlbums, accArtists], { album, artist }) => {
         if (accAlbums[album.id] === undefined) {
           accAlbums[album.id] = album;
@@ -72,11 +71,11 @@ function mapNewReleases(newReleases: { albums: NewReleasesResponse }) {
         }
         return [accAlbums, accArtists];
       },
-      [{} as accMap, {} as accMap]
+      [{}, {}]
     );
 
-  const albums = Object.values(releaseValues[0]) as Array<Album>;
-  const artists = Object.values(releaseValues[1]) as Array<AlbumArtist>;
+  const albums = Object.values(releaseValues[0]);
+  const artists = releaseValues[1];
 
   console.debug('succesfully mapped new releases', newReleases, {
     albums,
