@@ -26,7 +26,7 @@ describe('SpotifyState', () => {
     };
     store.reset(state);
     const response = store.selectSnapshot(SpotifyState.albums);
-    expect(response).toBe([]);
+    expect(response).toEqual([]);
   });
 
   it('should return empty array for artists when no artists', () => {
@@ -37,6 +37,6 @@ describe('SpotifyState', () => {
     };
     store.reset(state);
     const response = store.selectSnapshot(SpotifyState.artists);
-    expect(response).toBe([]);
+    expect(response).toEqual([]);
   });
 });
