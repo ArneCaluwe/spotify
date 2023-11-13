@@ -1,0 +1,14 @@
+@if (album$ | async; as album) {
+  <div class="flex overflow-hidden rounded-md">
+    <div
+      class="w-[64px] h-[64px] lg:w-[80px] lg:h-[80px] bg-black shrink-0 transition-all">
+      <img
+        [src]="album.images['2'].url"
+        alt="album cover for  {{ album.name }}" />
+    </div>
+    <div
+      class="bg-gradient-to-r from-gray-700 to-bg-ternary grid items-center p-2 w-full">
+      <strong>{{ album.name }}</strong>
+    </div>
+  </div>
+}
