@@ -38,7 +38,7 @@
       ],
       "rules": {
         "prettier/prettier": [
-          "warning", // todo: revert to error
+          "error",
           {
             "parser": "angular"
           }
