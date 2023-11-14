@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Album } from '@app/services/spotify.service';
-import { SpotifyState } from '@app/state';
+import { AlbumsState } from '@app/state/album.state';
 import { Store } from '@ngxs/store';
 import { Observable, map } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class NewReleaseComponent {
 
   constructor(store: Store) {
     this.album$ = store
-      .select(SpotifyState.albums)
+      .select(AlbumsState.newReleases)
       .pipe(map(albums => albums.find(a => a.id == this.albumId)));
   }
 }

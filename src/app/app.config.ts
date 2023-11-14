@@ -15,10 +15,11 @@ import { NgxsModule } from '@ngxs/store';
 import { routes } from './app.routes';
 import { authorizationInterceptor } from './interceptors/authorization.interceptor';
 import { AuthState, SpotifyState } from './state';
+import { AlbumsState } from './state/album.state';
 
 const provideNgxs: () => EnvironmentProviders = () =>
   importProvidersFrom(
-    NgxsModule.forRoot([SpotifyState, AuthState], {
+    NgxsModule.forRoot([SpotifyState, AlbumsState, AuthState], {
       developmentMode: !environment.production,
       selectorOptions: {
         suppressErrors: false,

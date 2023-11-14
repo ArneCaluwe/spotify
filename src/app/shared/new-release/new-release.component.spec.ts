@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SpotifyState } from '@app/state';
+import { AlbumsState } from '@app/state/album.state';
 import { NgxsModule, Store } from '@ngxs/store';
 import { NewReleaseComponent } from './new-release.component';
 
@@ -13,7 +13,7 @@ describe('NewReleaseComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         NewReleaseComponent,
-        NgxsModule.forRoot([SpotifyState]),
+        NgxsModule.forRoot([AlbumsState]),
         HttpClientTestingModule,
       ],
     }).compileComponents();
@@ -31,8 +31,8 @@ describe('NewReleaseComponent', () => {
     component.albumId = '1';
     const store = TestBed.inject(Store);
     const state = {
-      spotify: {
-        albums: [
+      albums: {
+        newReleases: [
           { id: '1', name: 'Album 1', images: [{}, {}, { url: 'some-url' }] },
         ],
       },
