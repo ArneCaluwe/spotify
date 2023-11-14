@@ -4,7 +4,7 @@ import {
   AlbumArtist,
   SpotifyService,
 } from '@app/services/spotify.service';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { AccesTokenValidated } from './auth.state.actions';
 import { FetchNewReleases } from './spotify.state.actions';
@@ -13,8 +13,10 @@ export interface AlbumsStateModel {
   newReleases: Array<Album>;
   albumArtists: { [key: string]: AlbumArtist };
 }
+
+const ALBUM_STATE_TOKEN = new StateToken<AlbumsStateModel[]>('albums');
 @State<AlbumsStateModel>({
-  name: 'albums',
+  name: ALBUM_STATE_TOKEN,
   defaults: {
     newReleases: [],
     albumArtists: {},

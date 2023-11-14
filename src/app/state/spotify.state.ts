@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Artist, SpotifyService } from '@app/services/spotify.service';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { tap } from 'rxjs';
 import { AccesTokenValidated } from './auth.state.actions';
 import {
@@ -13,8 +13,9 @@ export interface SpotifyStateModel {
   artists: Array<Artist>;
 }
 
+const SPOTIFY_STATE_TOKEN = new StateToken<SpotifyStateModel[]>('spotify');
 @State<SpotifyStateModel>({
-  name: 'spotify',
+  name: SPOTIFY_STATE_TOKEN,
   defaults: {
     favorites: [],
     artists: [],

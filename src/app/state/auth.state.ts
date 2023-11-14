@@ -5,7 +5,14 @@ import {
   SpotifyAccessToken,
   isSpotifyAuthenticationToken,
 } from '@app/services/auth.service';
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
+import {
+  Action,
+  NgxsOnInit,
+  Selector,
+  State,
+  StateContext,
+  StateToken,
+} from '@ngxs/store';
 import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {
@@ -22,8 +29,10 @@ export interface AuthStateModel {
   codeVerifier?: string;
 }
 
+const AUTH_STATE_TOKEN = new StateToken<AuthStateModel[]>('auth');
+
 @State<AuthStateModel>({
-  name: 'auth',
+  name: AUTH_STATE_TOKEN,
   defaults: {
     accesToken: undefined,
     codeVerifier: undefined,
