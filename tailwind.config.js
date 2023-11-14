@@ -4,9 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'bg-primary': 'rgb(0,0,0)',
-        'bg-secondary': 'rgb(18, 18, 18)',
-        'bg-ternary': 'rgb(67, 67, 67)',
+        primary: 'var(--primary)',
+        'bg-primary': 'var(--bg-primary)',
+        'bg-secondary': 'var(--bg-secondary)',
+        'bg-ternary': 'var(--bg-ternary)',
+        'inverse-primary': 'var(--inverse-primary)',
+        'inverse-secondary': 'var(--inverse-secondary)',
+        'inverse-ternary': 'var(--inverse-ternary)',
       },
       gap: {
         theme: '8px',
